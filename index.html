@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Uploader</title>
+    <style>
+        .loader {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            float: left;
+            display: none;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<a href='/images.php'>Images List</a><br>
+<form method="post" name="multiple_upload_form" id="multiple_upload_form" enctype="multipart/form-data"
+      action="upload.php">
+    <input type="hidden" name="image_form_submit" value="1"/>
+    <label>Choose Image</label>
+    <input type="file" name="images[]" id="images" multiple>
+    <div class="loader"></div>
+</form>
+
+<div id="response"></div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#images').on('change', function () {
+            var options = {
+                beforeSubmit: __beforeSubmit,
+                target: '#response',
+                success: __success,
+                error: function (e) {
+                }
+            };
+            $('#multiple_upload_form').ajaxForm(options).submit();
+        });
+    });
+
+    function __beforeSubmit() {
+        $('.loader').show();
+    }
+
+    function __success() {
+        $('.loader').hide();
+    }
+</script>
+</body>
+</html>
