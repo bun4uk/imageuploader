@@ -6,6 +6,8 @@
  * Time: 00:01
  */
 
+// Used for deleting images
+
 require_once('db.php');
 
 try {

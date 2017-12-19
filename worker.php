@@ -6,10 +6,11 @@
  * Time: 22:43
  */
 
+// Worker for RabbitMQ. Used for cropping images.
+
 require_once './vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-
 
 $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
 $channel = $connection->channel();
@@ -19,8 +20,6 @@ $channel->queue_declare('images_crop', false, false, false, false);
 $callback = function ($msg) {
 
     try {
-
-
         $filename = 'uploads/original/' . $msg->body;
         list($width, $height) = getimagesize($filename);
         $newwidth = 100;
@@ -29,13 +28,8 @@ $callback = function ($msg) {
         $source = imageCreateFromFile($filename);
         imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
         imagepng($thumb, 'uploads/cropped/' . $msg->body);
-
         echo "[x] $msg->body was cropped\n";
-
-
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-
-
     } catch (\Exception $e) {
         echo "[x] $msg->body was fail\n";
     }

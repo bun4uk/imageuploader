@@ -6,6 +6,8 @@
  * Time: 23:24
  */
 
+// Used for view and editing images
+
 require_once('db.php');
 
 echo "<a href='/'>Homepage</a><br>";

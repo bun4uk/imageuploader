@@ -6,6 +6,8 @@
  * Time: 21:54
  */
 
+// Used for images upload
+
 require_once './vendor/autoload.php';
 require_once('db.php');
 
@@ -21,16 +23,23 @@ try {
 }
 
 try {
-    $maxFileCount = 5;
+    //creating directories
+    if (!file_exists('uploads')) {
+        mkdir('uploads', 0777, true);
+        mkdir('uploads/original', 0777, true);
+        mkdir('uploads/cropped', 0777, true);
+    }
+
+    //set max count of uploaded files
+    $maxFilesCount = 5;
     $currentFilesCount = count($_FILES['images']['name']);
 
-    if ($currentFilesCount > $maxFileCount) {
-        $currentFilesCount = $maxFileCount;
-        echo('Max files count is 5 in a time! <br>');
+    if ($currentFilesCount > $maxFilesCount) {
+        $currentFilesCount = $maxFilesCount;
+        echo('Max files count is 5 at a time! <br>');
     }
 
     for ($i = 0; $i < $currentFilesCount; $i++) {
-
         if (is_image($_FILES['images']['name'][$i])) {
             //upload and stored images
             $target_dir = "uploads/original/";
